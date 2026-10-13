@@ -1,0 +1,22 @@
+# A role that uses Entra claims as Teleport traits.
+#
+# Every attribute in the SAML assertion becomes a trait under its full claim
+# name. Standard Entra claims keep their URI, so they are read with bracket
+# syntax; a custom claim you add without a namespace (the README's "username"
+# claim) is read with dot syntax.
+kind: role
+version: v8
+metadata:
+  name: developer
+spec:
+  allow:
+    # Log in to servers as the user's Entra account name, lower-cased.
+    logins:
+      - "{{external.username}}"
+    node_labels:
+      env: dev
+    # Servers labelled with an Entra group object ID are reachable only by
+    # members of that group; the groups claim carries every assigned group.
+    # node_labels:
+    #   owner-group: '{{external["http://schemas.microsoft.com/ws/2008/06/identity/claims/groups"]}}'
+  deny: {}

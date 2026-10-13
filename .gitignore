@@ -1,0 +1,2 @@
+# The rendered connector holds your tenant, application and group IDs.
+connector.yaml
