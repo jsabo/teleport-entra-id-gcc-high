@@ -1,13 +1,6 @@
 # Teleport SAML connector for a Microsoft Entra ID tenant in GCC High.
-#
-# Replace the four placeholders:
-#   PROXY_ADDR   the address users type to reach Teleport, e.g. teleport.example.gov
-#   TENANT_ID    Entra ID -> Overview -> Tenant ID
-#   APP_ID       the enterprise application's Application ID (Overview page)
-#   GROUP_*_ID   object IDs of the Entra groups assigned to the application
-#
-# The same string must be entered in Entra as the application's Identifier
-# (Entity ID) and Reply URL: https://PROXY_ADDR/v1/webapi/saml/acs/entra-id
+# Fill in the five placeholders: PROXY_ADDR, TENANT_ID, APP_ID and the two
+# group object IDs. The README explains each.
 kind: saml
 version: v2
 metadata:
@@ -15,35 +8,28 @@ metadata:
 spec:
   display: Microsoft Entra ID
 
-  # Where Entra posts the signed assertion. All three are the same URL.
+  # The same URL goes into Entra as Identifier (Entity ID) and Reply URL.
   acs: https://PROXY_ADDR/v1/webapi/saml/acs/entra-id
   audience: https://PROXY_ADDR/v1/webapi/saml/acs/entra-id
   service_provider_issuer: https://PROXY_ADDR/v1/webapi/saml/acs/entra-id
 
-  # Entra's signing certificate and sign-in URL are read from this document.
-  # GCC High publishes it on login.microsoftonline.us, not login.microsoftonline.com.
+  # Entra's signing certificate and sign-in URL come from this document on
+  # the GCC High sign-in host.
   entity_descriptor_url: https://login.microsoftonline.us/TENANT_ID/federationmetadata/2007-06/federationmetadata.xml?appid=APP_ID
-  entity_descriptor: ""
-  cert: ""
-  issuer: ""
-  sso: ""
 
-  # Entra sends group object IDs in the groups claim. One entry per group;
-  # a user in several mapped groups receives the union of the roles.
+  # One entry per Entra group, matched by object ID.
   attributes_to_roles:
     - name: http://schemas.microsoft.com/ws/2008/06/identity/claims/groups
       value: GROUP_ADMINS_ID
       roles:
         - editor
-        - auditor
     - name: http://schemas.microsoft.com/ws/2008/06/identity/claims/groups
       value: GROUP_DEVELOPERS_ID
       roles:
         - access
 
-  # Entra omits the groups claim when a user is in more than 150 groups and
-  # sends a Microsoft Graph link instead. Following that link needs Graph API
-  # access on the global cloud endpoints, so it is turned off here; the group
-  # claim in Entra is limited to groups assigned to the application instead.
+  # When a user is in more than 150 groups Entra sends a Microsoft Graph link
+  # instead of the groups. Teleport follows it only on the global cloud
+  # endpoint, which GCC High does not serve, so following is turned off.
   entra_id_groups_provider:
     disabled: true
