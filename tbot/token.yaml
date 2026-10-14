@@ -1,0 +1,15 @@
+# Join token for the "terraform" bot. Teleport writes a one-time registration
+# secret into the token's status when it is created.
+kind: token
+version: v2
+metadata:
+  name: terraform
+spec:
+  roles: [Bot]
+  bot_name: terraform
+  join_method: bound_keypair
+  bound_keypair:
+    recovery:
+      # The bot may rejoin without a new token if its storage directory is
+      # lost, for example when the machine that runs Terraform is rebuilt.
+      mode: relaxed

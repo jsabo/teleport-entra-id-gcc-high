@@ -1,0 +1,21 @@
+proxy_addr = "teleport.agency.us:443"
+
+access_lists = {
+  dev-servers = {
+    title       = "Development servers"
+    description = "SSH to servers labelled env: dev"
+    roles       = ["developer"]
+    owners      = ["carol@agency.us"]
+    members = [
+      "alice@agency.us",
+      "bob@agency.us",
+    ]
+  }
+
+  auditors = {
+    title   = "Audit log readers"
+    roles   = ["auditor"]
+    owners  = ["carol@agency.us"]
+    members = ["dana@agency.us"]
+  }
+}

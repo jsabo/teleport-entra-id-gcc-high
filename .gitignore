@@ -1,2 +1,15 @@
 # The rendered connector holds your tenant, application and group IDs.
 connector.yaml
+
+# Terraform state, provider cache and private variable files.
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+terraform/*.auto.tfvars
+
+# tbot: the rendered config holds the registration secret; storage and
+# identity hold private keys.
+tbot/tbot.yaml
+tbot/storage/
+tbot/identity/

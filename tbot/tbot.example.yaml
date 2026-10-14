@@ -1,0 +1,20 @@
+# Copy to tbot/tbot.yaml (ignored by git) and fill in the two placeholders.
+# Paths are relative to the working directory; start tbot from the
+# repository root.
+version: v2
+proxy_server: PROXY_ADDR:443
+onboarding:
+  join_method: bound_keypair
+  token: terraform
+  bound_keypair:
+    # tctl get token/terraform --format=json | jq -r '.[0].status.bound_keypair.registration_secret'
+    # Used once. Delete this line after the first successful start.
+    registration_secret: REGISTRATION_SECRET
+storage:
+  type: directory
+  path: tbot/storage
+services:
+  - type: identity
+    destination:
+      type: directory
+      path: tbot/identity
